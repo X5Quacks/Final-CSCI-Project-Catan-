@@ -1,0 +1,15 @@
+/*
+ * settlements, cities, or anything else we choose
+ */
+public class Node{
+ int playerControl; //0 = no control, any number = that player controls the node
+ String structure;
+ String name;
+ 
+ Node(String name){
+   this.playerControl = 0;
+   this.structure = "";
+   this.name = name;
+ }
+  
+}
