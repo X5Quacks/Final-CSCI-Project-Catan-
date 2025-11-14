@@ -1,6 +1,5 @@
 //Updated 11/14/25 - Colton
 public class Hexagon {
-
   private String resourceType;
   private int resourceNumber;
   private boolean robberStatus = false;
@@ -9,11 +8,34 @@ public class Hexagon {
     this.resourceType = resourceType;
     this.resourceNumber = resourceNumber;
   }
-    
-    public Hexagon(String resourceType){
+  
+  public Hexagon(String resourceType){
     this.resourceType = resourceType;
     this.resourceNumber = -1;
     this.robberStatus = true;
   }
   
+  /**
+   * returns the resourceType
+   * @return resourceType the type of resource the Hex produces
+   */
+  public String getResourceType(){
+    return resourceType;
+  }
+  
+  /**
+   * returns the number on the Hex
+   * @return resourceNumber is the number on top of the Hex
+   */
+  public int getResourceNumber(){
+    return resourceNumber;
+  }
+  
+  /**
+   * says whether the robber is on the Hex
+   * @return robberStatus is a boolean aboud if the robber is on the Hex
+   */
+  public boolean getRobberStatus(){
+    return robberStatus;
+  }
 }
