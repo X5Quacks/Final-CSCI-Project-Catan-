@@ -1,0 +1,19 @@
+//Updated 11/14/25 - Colton
+public class Hexagon {
+
+  private String resourceType;
+  private int resourceNumber;
+  private boolean robberStatus = false;
+  
+  public Hexagon(String resourceType, int resourceNumber){
+    this.resourceType = resourceType;
+    this.resourceNumber = resourceNumber;
+  }
+    
+    public Hexagon(String resourceType){
+    this.resourceType = resourceType;
+    this.resourceNumber = -1;
+    this.robberStatus = true;
+  }
+  
+}
