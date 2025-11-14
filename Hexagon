@@ -38,4 +38,13 @@ public class Hexagon {
   public boolean getRobberStatus(){
     return robberStatus;
   }
+  
+  /**
+   * Tells if the Robber is on the Hex or not
+   * @param status is if the robber is going to be on the Hex or leaving
+   */
+  public void setRobberStatus(boolean status){
+    this.robberStatus = status;
+  }
+  
 }
