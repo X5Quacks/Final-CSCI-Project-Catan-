@@ -1,0 +1,71 @@
+**
+ * Represents a weighted directed edge from one vertex to another
+ * in a graph. Each edge stores a destination vertex label and a weight.
+ * 
+ */
+public class Edge implements Comparable<Edge>{
+  String destination;/** The destination vertex this edge points to. */
+  double weight;/** The weight or cost associated with this edge. */
+  int playerRoad; //0 = no road, any number = that player has a road here
+  
+  /**
+   * Constructs an  Edge object with the specified destination vertex
+   * and edge weight.
+   * 
+   * @param dest  the destination vertex label
+   * @param w     the weight of the edge
+   */
+  Edge(String dest, double w) {
+    destination = dest;
+    weight = w;
+    playerRoad = 0;
+  }
+  /**
+   * Returns a string representation of this edge, including
+   * its destination vertex and weight.
+   *
+   * @return a string in the format "(destination, weight)"
+   */
+  @Override
+  public String toString() {
+    return "(" + destination + ", " + weight + ")";
+  }
+  
+  /**
+   * Determines whether two  Edge objects are equal.
+   * Two edges are considered equal if they have the same destination vertex.
+   * 
+   * @param obj  the object to compare with this edge
+   * @return true if the given object is an  Edge
+   *         with the same destination;  false otherwise
+   */
+  
+  @Override
+  public boolean equals(Object obj) {
+    if (!(obj instanceof Edge)) return false;
+    Edge other = (Edge) obj;
+    return this.destination.equals(other.destination);
+  }
+  /**
+   * Returns the hash code for this edge.
+   * The hash code is based solely on the destination vertex name.
+   * 
+   * @return the hash code of the destination string
+   */
+  @Override
+  public int hashCode() {
+    return destination.hashCode();
+  }
+  /**
+   * Compares this edge with another edge based on their weights.
+   * 
+   * @param other  the other edge to compare to
+   * @return a negative integer, zero, or a positive integer as this edge's
+   *         weight is less than, equal to, or greater than the other edge's weight
+   */
+  @Override
+  public int compareTo(Edge other) {
+    // Compare by weight
+    return Double.compare(this.weight, other.weight);
+  }
+}
