@@ -22,3 +22,33 @@ U
 V
 W
 X
+A B 1
+A F 1
+A G 1
+B C 1
+B J 1
+C D 1
+C M 1
+D E 1
+D P 1
+E F 1
+E S 1
+F V 1
+G H 1
+G X 1
+H I 1
+I J 1
+J K 1
+K L 1
+L M 1
+M N 1
+N O 1
+O P 1
+P Q 1
+Q R 1
+R S 1
+S T 1
+T U 1
+U V 1
+V W 1
+W X 1
