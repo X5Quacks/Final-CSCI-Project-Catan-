@@ -1,0 +1,200 @@
+//Updated 11/21/2025 Aaron
+
+import java.util.*;
+import java.io.*;
+
+public class Board{
+  //DATA STRUCTURES of Board
+  private final Map<Node, List<Edge>> roadPaths = new HashMap<>();
+  private final Map<Node, List<Hexagon>> resources = new HashMap<>();
+  
+  //Lists for Board creation
+  private final List<Node> explored = new ArrayList<Node>();
+  //List<String> hexList = Arrays.asList(wheat, wheat, wheat, wheat, stone, stone, stone, brick, brick, brick, sheep, sheep, sheep, sheep, wood, wood, wood, wood);
+  //List<int> numberList = Arrays.asList(2, 3, 3, 4, 4, 5, 5, 6, 6, 8, 8, 9, 9, 10, 10, 11, 11, 12);
+  private List<String> hexList = new ArrayList<>(Arrays.asList("wheat", "stone", "brick", "sheep", "wood", "wood"));
+  private List<Integer> numberList = new ArrayList<>(Arrays.asList(4, 5, 6, 8, 9, 10));
+  
+  //RANDOM
+  private final Random r = new Random();
+  
+  
+  public Board() throws IOException{
+    Scanner input = new Scanner(new File("buildFile.txt"));
+    
+    //Create the Nodes
+    for(int i = 0; i < 24; i++){
+      String name = input.nextLine();
+      Node e = new Node(name);
+      getRoads().put(e, new ArrayList<Edge>());
+      getResources().put(e, new ArrayList<Hexagon>());
+    }
+    //Add Edges to the Nodes
+    while(input.hasNext()){
+      String data = input.nextLine();
+      String[] datas = data.split(" ");
+      addEdge(getNode(datas[0]), getNode(datas[1]), Integer.parseInt(datas[2]));
+      addEdge(getNode(datas[1]), getNode(datas[0]), Integer.parseInt(datas[2]));
+    }
+    
+    //Assign resource Hexagons to the Nodes
+    Hexagon desert = new Hexagon("desert");
+    Hexagon r1 = new Hexagon(getHexList().remove(r().nextInt(getHexList().size())), getNumberList().remove(r().nextInt(getNumberList().size())));
+    Hexagon r2 = new Hexagon(getHexList().remove(r().nextInt(getHexList().size())), getNumberList().remove(r().nextInt(getNumberList().size())));
+    
+    assignHexes(getNode("A"), desert, r1, r2); //recursive call
+    
+    //used AI to make some fancy print statements
+    getRoads().forEach((key, value) -> System.out.println("Key: " + key + ", Value: " + value));
+    getResources().forEach((key, value) -> System.out.println("Key: " + key + ", Value: " + value));
+  
+  }
+  /*
+   * gets the board connections between Nodes and Edges
+   * @return Map<Node, List<Edge>> as the Node and Edge map for player pieces
+   */
+  public Map<Node, List<Edge>> getRoads(){
+    return this.roadPaths;
+  }
+  
+  /*
+   * gets the board Hexagons that connect to the Nodes
+   * @return Map<Node, List<Hexagon>> as the Node and Hexgon map for resource types around a Node
+   */
+  public Map<Node, List<Hexagon>> getResources(){
+    return this.resources;
+  }
+  
+  /*
+   * add an Edge between two Nodes
+   * @param name as Node as the Node the Edge is starting from
+   * @param destination as Node as the Node the Edge is going to
+   * @param weight as double as the travel distance of the Edge
+   */
+  public void addEdge(Node name, Node destination, double weight){
+    roadPaths.get(name).add(new Edge(destination, weight));
+  }
+  
+  /*
+   * get a Node by name from the Map
+   * @param name as String as the letter name of the Node
+   * @return the Node
+   */
+  public Node getNode(String name){
+    for(Node node : roadPaths.keySet()){
+      if(node.getName().equals(name)){
+        return node;
+      }
+    }
+    return null;
+  }
+  
+  /*
+   * get the Edges attached to a Node
+   * @param n as Node as the Node checking for adjacency
+   * @return List<Edge> as the list of Edges connected to this Node n
+   */
+  public List<Edge> getAdjacents(Node n){
+    return roadPaths.get(n);
+  }
+  
+  /*
+   * get the terrain list for Hexagons in Catan
+   * @return List<String> as the hexList
+   */
+  public List<String> getHexList(){
+    return hexList;
+  }
+  
+  /*
+   * get the numbers list for Hexagons in Catan
+   * @return List<Integer> as the numberList
+   */
+  public List<Integer> getNumberList(){
+    return numberList;
+  }
+  
+  /*
+   * get the Random object for randomization
+   * @return Random
+   */
+  public Random r(){
+    return r; 
+  }
+  
+  /*
+   * assign 3 resource Hexagons to a Node (starts recursive calls)
+   * @param n as Node as the Node to assign resource Hexagons to
+   * @param hex_1 as Hexagon as the first resource hex
+   * @param hex_2 as Hexagon as the second resource hex
+   * @param hex_3 as Hexagon as the third resource hex
+   */
+  public void assignHexes(Node n, Hexagon hex_1, Hexagon hex_2, Hexagon hex_3){
+    if(!explored.contains(n)){
+      //assign the 3 Hexagons to this Node
+      resources.get(n).add(hex_1);
+      resources.get(n).add(hex_2);
+      resources.get(n).add(hex_3);
+      
+      //make sure it doesn't get assigned again
+      explored.add(n);
+      
+      //recur on adjacent Nodes
+      List<Edge> adjacents = getAdjacents(n);
+      assignHexes(adjacents.get(0).getNode(), hex_1, hex_2);
+      assignHexes(adjacents.get(1).getNode(), hex_1, hex_3);
+      assignHexes(adjacents.get(2).getNode(), hex_2, hex_3);
+    }
+  }
+  
+  /*
+   * assign 2 or 3 resource Hexagons to a Node
+   * (based on whether a random hex is remaining or the Node is on the edge of the board)
+   * @param n as Node as the Node to assign resource Hexagons to
+   * @param hex_1 as Hexagon as the first resource hex
+   * @param hex_2 as Hexagon as the second resource hex
+   */
+  public void assignHexes(Node n, Hexagon hex_1, Hexagon hex_2){
+    if(!explored.contains(n)){
+      if(hexList.isEmpty()){
+        resources.get(n).add(hex_1);
+        resources.get(n).add(hex_2);
+        explored.add(n);
+        List<Edge> adjacents = getAdjacents(n);
+        if(n.getName().equals("F")){
+          Hexagon start = resources.get(getNode("A")).get(2);
+          resources.get(n).add(start);
+          assignHexes(adjacents.get(2).getNode(), hex_2, start);
+        }
+        else{
+          assignHexes(adjacents.get(1).getNode(), hex_1);
+          assignHexes(adjacents.get(2).getNode(), hex_2);
+        }
+      }
+      else{
+        Hexagon r3 = new Hexagon(hexList.remove(r.nextInt(hexList.size())), numberList.remove(r.nextInt(numberList.size())));
+        resources.get(n).add(hex_1);
+        resources.get(n).add(hex_2);
+        resources.get(n).add(r3);
+        explored.add(n);
+        List<Edge> adjacents = getAdjacents(n);
+        assignHexes(adjacents.get(1).getNode(), hex_1, r3);
+        assignHexes(adjacents.get(2).getNode(), hex_2, r3);
+      }
+    }
+  }
+  
+  /*
+   * assign 1 resource Hexagon to a Node
+   * (on the corners of the board)
+   * @param n as Node as the Node to assign resource Hexagons to
+   * @param hex as Hexagon as the resource hex
+   */
+  public void assignHexes(Node n, Hexagon hex){
+    if(!explored.contains(n)){
+      resources.get(n).add(hex);
+      explored.add(n);
+    } 
+  }
+
+}
