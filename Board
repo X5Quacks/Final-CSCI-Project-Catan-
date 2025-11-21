@@ -42,12 +42,7 @@ public class Board{
     Hexagon r1 = new Hexagon(getHexList().remove(r().nextInt(getHexList().size())), getNumberList().remove(r().nextInt(getNumberList().size())));
     Hexagon r2 = new Hexagon(getHexList().remove(r().nextInt(getHexList().size())), getNumberList().remove(r().nextInt(getNumberList().size())));
     
-    assignHexes(getNode("A"), desert, r1, r2); //recursive call
-    
-    //used AI to make some fancy print statements
-    getRoads().forEach((key, value) -> System.out.println("Key: " + key + ", Value: " + value));
-    getResources().forEach((key, value) -> System.out.println("Key: " + key + ", Value: " + value));
-  
+    assignHexes(getNode("A"), desert, r1, r2); //recursive call  
   }
   /*
    * gets the board connections between Nodes and Edges
