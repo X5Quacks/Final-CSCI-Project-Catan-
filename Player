@@ -1,0 +1,109 @@
+/*
+ * tracks a player's resources and current location
+ */
+public class Player{
+  int wood;
+  int stone;
+  int sheep;
+  int clay;
+  int wheat;
+  Node current;
+  
+  Player(Node current){
+    this.wood = 0;
+    this.stone = 0;
+    this.sheep = 0;
+    this.clay = 0;
+    this.wheat = 0;
+    this.current = current;
+  }
+  
+  /**
+   * Returns the current Node the player is at
+   * @return Node as the player's current location
+   */
+  public Node getCurrent(){
+    return current;
+  }
+  
+  /**
+   * returns the amount of wood the player has
+   * @return int the total wood the Player has
+   */
+  public int getWood(){
+    return wood;
+  }
+  
+  /*
+   * modify the amount of wood the player has
+   * @param modify as int as the amount of wood to modify by
+   */
+  public void modifyWood(int modify){
+    this.wood = getWood() + modify;
+  }
+  
+  /**
+   * returns the amount of stone the player has
+   * @return int the total stone the Player has
+   */
+  public int getStone(){
+    return stone;
+  }
+  
+  /*
+   * modify the amount of stone the player has
+   * @param modify as int as the amount of stone to modify by
+   */
+  public void modifyStone(int modify){
+    this.stone = getStone() + modify;
+  }
+  
+  /**
+   * returns the amount of sheep the player has
+   * @return int the total sheep the Player has
+   */
+  public int getSheep(){
+    return sheep;
+  }
+  
+  /*
+   * modify the amount of sheep the player has
+   * @param modify as int as the amount of sheep to modify by
+   */
+  public void modifySheep(int modify){
+    this.stone = getSheep() + modify;
+  }
+  
+  /**
+   * returns the amount of clay the player has
+   * @return int the total clay the Player has
+   */
+  public int getClay(){
+    return clay;
+  }
+  
+  /*
+   * modify the amount of clay the player has
+   * @param modify as int as the amount of clay to modify by
+   */
+  public void modifyClay(int modify){
+    this.clay = getClay() + modify;
+  }
+  
+  /**
+   * returns the amount of wheat the player has
+   * @return int the total wheat the Player has
+   */
+  public int getWheat(){
+    return wheat;
+  }
+  
+  /*
+   * modify the amount of wheat the player has
+   * @param modify as int as the amount of wheat to modify by
+   */
+  public void modifyWheat(int modify){
+    this.clay = getWheat() + modify;
+  }
+  
+}
