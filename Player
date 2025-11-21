@@ -8,6 +8,7 @@ public class Player{
   int clay;
   int wheat;
   Node current;
+  int score;
   
   Player(Node current){
     this.wood = 0;
@@ -16,6 +17,7 @@ public class Player{
     this.clay = 0;
     this.wheat = 0;
     this.current = current;
+    this.score = 0;
   }
   
   /**
