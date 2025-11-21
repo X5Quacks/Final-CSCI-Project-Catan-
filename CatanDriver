@@ -1,6 +1,8 @@
 //Update(Aaron, 11/21/2025)
 import java.util.*;
 import java.io.*;
+import java.util.Scanner;
+import java.util.Random;
 /*
  * play game
  * please work
@@ -19,4 +21,39 @@ public class CatanDriver{
     board.getResources().forEach((key, value) -> System.out.println("Key: " + key + ", Value: " + value));
     
   }
+  
+  private final Map<Node, List<Edge>> roadPaths = new HashMap<>();
+  private final Map<Node, List<Hexagon>> resources = new HashMap<>();
+  private static final Random random = new Random();
+  
+  //public Board{
+  
+  //}
+  
+  public static  void userTurnSelection(){
+    Scanner scanner = new Scanner(System.in);
+    int userNum;
+    do {
+      System.out.println("1) Move");
+      System.out.println("2) Build");
+      System.out.println("3) Check nearest settlement");
+      System.out.println("4) Trade");
+      System.out.println("5) End Turn");
+      
+      while (!scanner.hasNextInt()) {
+        System.out.println("Enter a valid input");
+        scanner.next(); 
+      }
+      userNum = scanner.nextInt();
+    } while (userNum <= 0);
+    
+    
+  }
+  
+  public static int diceRoll(){ 
+    int dice1 = random.nextInt(6) + 1;
+    int dice2 = random.nextInt(6) + 1;
+    return dice1 + dice2;
+  }
+  
 }
