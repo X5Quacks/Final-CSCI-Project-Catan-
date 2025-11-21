@@ -56,4 +56,21 @@ public class CatanDriver{
     return dice1 + dice2;
   }
   
+  public static void move(){ //ToDo
+    
+  }
+  
+  public static void build(){ //ToDo
+    
+  }
+  
+  public static void checkNearestSettlement(){ //ToDo
+    
+  }
+  
+  public static void Trade(){ //ToDo
+    
+  }
+  
+  
 }
