@@ -14,3 +14,4 @@ Colton TODO:
 - check nearest settlement player option
 - trade at settlement player option
 - move player option
+- display player's current area (whether GUI or text)
