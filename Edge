@@ -1,10 +1,10 @@
-**
+/**
  * Represents a weighted directed edge from one vertex to another
  * in a graph. Each edge stores a destination vertex label and a weight.
  * 
  */
 public class Edge implements Comparable<Edge>{
-  String destination;/** The destination vertex this edge points to. */
+  Node destination;/** The destination vertex this edge points to. */
   double weight;/** The weight or cost associated with this edge. */
   int playerRoad; //0 = no road, any number = that player has a road here
   
@@ -15,11 +15,20 @@ public class Edge implements Comparable<Edge>{
    * @param dest  the destination vertex label
    * @param w     the weight of the edge
    */
-  Edge(String dest, double w) {
+  Edge(Node dest, double w) {
     destination = dest;
     weight = w;
     playerRoad = 0;
   }
+  
+  /*
+   * gets the Node this Edge leads to
+   * @return Node
+   */
+  public Node getNode(){
+    return destination;
+  }
+  
   /**
    * Returns a string representation of this edge, including
    * its destination vertex and weight.
@@ -69,3 +78,4 @@ public class Edge implements Comparable<Edge>{
     return Double.compare(this.weight, other.weight);
   }
 }
+
