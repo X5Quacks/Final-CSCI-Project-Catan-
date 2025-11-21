@@ -20,6 +20,7 @@ public class CatanDriver{
     board.getRoads().forEach((key, value) -> System.out.println("Key: " + key + ", Value: " + value));
     board.getResources().forEach((key, value) -> System.out.println("Key: " + key + ", Value: " + value));
     
+    userTurnSelection();
   }
   
   private final Map<Node, List<Edge>> roadPaths = new HashMap<>();
@@ -32,21 +33,45 @@ public class CatanDriver{
   
   public static  void userTurnSelection(){
     Scanner scanner = new Scanner(System.in);
-    int userNum;
-    do {
-      System.out.println("1) Move");
+    boolean check = true;
+    int userNum = 0;
+    
+    while(check){
+      System.out.println("\n1) Move");
       System.out.println("2) Build");
       System.out.println("3) Check nearest settlement");
       System.out.println("4) Trade");
-      System.out.println("5) End Turn");
-      
-      while (!scanner.hasNextInt()) {
-        System.out.println("Enter a valid input");
-        scanner.next(); 
+      System.out.print("5) End Turn\n: ");
+      String input = scanner.next();
+      if (Character.isDigit(input.charAt(0)) && input.length() < 2) {
+        userNum = Integer.parseInt(input);
+        if(userNum > 0 && userNum < 6){
+          check = false;
+          break;
+        }
       }
-      userNum = scanner.nextInt();
-    } while (userNum <= 0);
-    
+      if(check){
+        System.out.println("Enter a valid number"); }
+    }
+    switch (userNum) {
+      case 1:
+        
+        break;
+      case 2:
+        
+        break;
+      case 3:
+        
+        break;
+      case 4:
+        
+        break;
+      case 5:
+        
+        break;
+      default:
+        
+    }
     
   }
   
