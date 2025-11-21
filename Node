@@ -11,5 +11,22 @@ public class Node{
    this.structure = "";
    this.name = name;
  }
+
+//Updated 11/20/2025 Aaron added toString() and getName()
+   /**
+   * Returns a string representation of this Node
+   * @return a string in the format "(name: structure)"
+   */
+  @Override
+  public String toString() {
+    return name + ": " + structure;
+  }
   
+  /**
+   * returns the name of the Node
+   * @return String the name of the Node
+   */
+  public String getName(){
+    return name;
+  }
 }
