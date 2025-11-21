@@ -107,5 +107,13 @@ public class Player{
   public void modifyWheat(int modify){
     this.clay = getWheat() + modify;
   }
+
+  /*
+   * get the score of the player
+   * @return int as the score of the player
+   */
+  public int getScore(){
+    return score;
+  }
   
 }
