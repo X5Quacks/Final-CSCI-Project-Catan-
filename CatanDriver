@@ -1,6 +1,5 @@
-//Update(Aaron, 11/18/2025)
-//The Node and Edge Map is working. The Hexagons are not
-//TO-DO fix the Hexagon Map
+//Update(Aaron, 11/20/2025)
+//Hey this works now
 
 import java.util.*;
 import java.io.*;
@@ -44,7 +43,7 @@ public class CatanDriver{
     }
     
     //Assign resource Hexagons to the Nodes
-    Hexagon desert = new Hexagon("desert", -1);
+    Hexagon desert = new Hexagon("desert");
     Hexagon r1 = new Hexagon(cd.getHexList().remove(cd.r().nextInt(cd.getHexList().size())), cd.getNumberList().remove(cd.r().nextInt(cd.getNumberList().size())));
     Hexagon r2 = new Hexagon(cd.getHexList().remove(cd.r().nextInt(cd.getHexList().size())), cd.getNumberList().remove(cd.r().nextInt(cd.getNumberList().size())));
     
@@ -128,7 +127,13 @@ public class CatanDriver{
     return r; 
   }
   
-  
+  /*
+   * assign 3 resource Hexagons to a Node (starts recursive calls)
+   * @param n as Node as the Node to assign resource Hexagons to
+   * @param hex_1 as Hexagon as the first resource hex
+   * @param hex_2 as Hexagon as the second resource hex
+   * @param hex_3 as Hexagon as the third resource hex
+   */
   public void assignHexes(Node n, Hexagon hex_1, Hexagon hex_2, Hexagon hex_3){
     if(!explored.contains(n)){
       //assign the 3 Hexagons to this Node
@@ -147,6 +152,13 @@ public class CatanDriver{
     }
   }
   
+  /*
+   * assign 2 or 3 resource Hexagons to a Node
+   * (based on whether a random hex is remaining or the Node is on the edge of the board)
+   * @param n as Node as the Node to assign resource Hexagons to
+   * @param hex_1 as Hexagon as the first resource hex
+   * @param hex_2 as Hexagon as the second resource hex
+   */
   public void assignHexes(Node n, Hexagon hex_1, Hexagon hex_2){
     if(!explored.contains(n)){
       if(hexList.isEmpty()){
@@ -154,8 +166,15 @@ public class CatanDriver{
         resources.get(n).add(hex_2);
         explored.add(n);
         List<Edge> adjacents = getAdjacents(n);
-        assignHexes(adjacents.get(0).getNode(), hex_1);
-        assignHexes(adjacents.get(1).getNode(), hex_2);
+        if(n.getName().equals("F")){
+          Hexagon start = resources.get(getNode("A")).get(2);
+          resources.get(n).add(start);
+          assignHexes(adjacents.get(2).getNode(), hex_2, start);
+        }
+        else{
+          assignHexes(adjacents.get(1).getNode(), hex_1);
+          assignHexes(adjacents.get(2).getNode(), hex_2);
+        }
       }
       else{
         Hexagon r3 = new Hexagon(hexList.remove(r.nextInt(hexList.size())), numberList.remove(r.nextInt(numberList.size())));
@@ -164,16 +183,18 @@ public class CatanDriver{
         resources.get(n).add(r3);
         explored.add(n);
         List<Edge> adjacents = getAdjacents(n);
-        assignHexes(adjacents.get(0).getNode(), hex_1, r3);
-        assignHexes(adjacents.get(1).getNode(), hex_2, r3);
-        
-        /*if(hexList.isEmpty()){
-         resources.put(Node “F”, Hexagon r2);
-         }*/
+        assignHexes(adjacents.get(1).getNode(), hex_1, r3);
+        assignHexes(adjacents.get(2).getNode(), hex_2, r3);
       }
     }
   }
   
+  /*
+   * assign 1 resource Hexagon to a Node
+   * (on the corners of the board)
+   * @param n as Node as the Node to assign resource Hexagons to
+   * @param hex as Hexagon as the resource hex
+   */
   public void assignHexes(Node n, Hexagon hex){
     if(!explored.contains(n)){
       resources.get(n).add(hex);
