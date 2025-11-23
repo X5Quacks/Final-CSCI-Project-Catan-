@@ -1,64 +1,121 @@
-//Update(Aaron, 11/21/2025)
+//Update(Aaron, 11/22/2025)
 import java.util.*;
 import java.io.*;
-import java.util.Scanner;
-import java.util.Random;
+
 /*
  * play game
- * please work
+ * "Oh yeah, it's all coming together"
  */
 public class CatanDriver{
   
   //RANDOM
-  private final Random r = new Random();
-  
-  //main plays the game
-  public static void main(String[] args) throws IOException {
-    
-    //used AI to make some fancy print statements
-    Board board = new Board();
-    board.getRoads().forEach((key, value) -> System.out.println("Key: " + key + ", Value: " + value));
-    board.getResources().forEach((key, value) -> System.out.println("Key: " + key + ", Value: " + value));
-    
-    userTurnSelection();
-  }
-  
-  private final Map<Node, List<Edge>> roadPaths = new HashMap<>();
-  private final Map<Node, List<Hexagon>> resources = new HashMap<>();
   private static final Random random = new Random();
   
-  //public Board{
+  //GAMEBOARD
+  private static Board board;
   
-  //}
+  //PLAYERS
+  private static Player one;
+  private static Player two;
   
-  public static  void userTurnSelection(){
-    Scanner scanner = new Scanner(System.in);
+  public CatanDriver() throws IOException{
+    this.board = new Board();
+    this.one = new Player(getBoard().getNode("A"));
+    this.two = new Player(getBoard().getNode("D"));
+  }
+  
+  //main plays the game
+  public static void main(String[] args) throws IOException{
+    
+    //used AI to make some fancy print statements
+    CatanDriver cd = new CatanDriver();
+    getBoard().getRoads().forEach((key, value) -> System.out.println("Key: " + key + ", Value: " + value));
+    getBoard().getResources().forEach((key, value) -> System.out.println("Key: " + key + ", Value: " + value));
+    
+    int current = 1; //current player
+    
+    //TODO testing purposes only
+    getPlayer(1).modifyWood(5);
+    getPlayer(1).modifyClay(5);
+    getPlayer(1).modifyWheat(5);
+    getPlayer(1).modifySheep(5);
+    getPlayer(1).modifyStone(5);
+    
+    //TODO resources die roll
+    while(getPlayer(1).getScore() < 5 && getPlayer(2).getScore() < 5){
+      int endTurn = userTurnSelection(current);
+      if(endTurn == 5){
+        //TODO resources die roll
+        if(current==1){current++;}
+        else{current--;}
+      }
+      cd.getPlayer(current).score++; //TODO remove before final game
+    }
+  }
+  
+  /*
+   * return the Board
+   * @return Board as the Catan Board
+   */
+  public static Board getBoard(){
+    return board;
+  }
+  
+  /*
+   * get a Player's resources/current location
+   * @param selection as int as which Player to get
+   * @return Player as the selected Player
+   */
+  public static Player getPlayer(int selection){
+    if(selection==1){
+      return one;}
+    else{
+     return two;}
+  }
+  
+  /*
+   * keep the Player making inputs until they choose a valid option
+   * @param maxRange as int as the max value that has an option
+   * @param choices as String as the list of options for the Player
+   * @param Scanner as Player input
+   * @return int as the Player's choice
+   */
+  public static int scanCheck(int maxRange, String choices, Scanner scanner){
     boolean check = true;
     int userNum = 0;
-    
     while(check){
-      System.out.println("\n1) Move");
-      System.out.println("2) Build");
-      System.out.println("3) Check nearest settlement");
-      System.out.println("4) Trade");
-      System.out.print("5) End Turn\n: ");
+      System.out.print(choices);
       String input = scanner.next();
       if (Character.isDigit(input.charAt(0)) && input.length() < 2) {
         userNum = Integer.parseInt(input);
-        if(userNum > 0 && userNum < 6){
+        if(userNum > 0 && userNum < maxRange){
           check = false;
-          break;
-        }
-      }
+          break;}}
       if(check){
-        System.out.println("Enter a valid number"); }
-    }
+        System.out.println("Enter a valid number"); }}
+    return userNum;
+  }
+  
+  /*
+   * let the player choose an option for their turn
+   * (1) Move: move the player's piece to an adjacent location
+   * (2) Build: build a road, settlement, or city
+   * (3) Check Nearest Settlement: check how many moves the nearest settlement is away that you control
+   * (4) Trade: if you are at a settlement you control, swap resources for other resources
+   * (5) End Turn: end your turn, roll the resource dice, and go to the next player
+   * @param current as int as the current Player
+   */
+   public static int userTurnSelection(int current){
+    Scanner scanner = new Scanner(System.in);
+    boolean check = true;
+    int userNum = scanCheck(6, "\n1) Move\n2) Build\n3) Check nearest settlement\n4) Trade\n5) End Turn\n: ", scanner);
+    
     switch (userNum) {
       case 1:
         
         break;
       case 2:
-        
+        build(scanner, current);
         break;
       case 3:
         
@@ -67,12 +124,12 @@ public class CatanDriver{
         
         break;
       case 5:
-        
+        System.out.println("Ending player " + current + "'s turn.");
         break;
       default:
-        
+        break;
     }
-    
+    return userNum;
   }
   
   public static int diceRoll(){ 
@@ -85,8 +142,59 @@ public class CatanDriver{
     
   }
   
-  public static void build(){ //ToDo
-    
+  /*
+   * allow the player to build an object
+   * @param Scanner as player input
+   * @param current as int as the current Player
+   */
+  public static void build(Scanner scanner, int current){
+    int userNum = scanCheck(4, "What do you want to build?\n1) Road\n2) Settlement\n3) City\n: ", scanner);
+
+    Player p = getPlayer(current);
+    switch (userNum) {
+      case 1: // build Road
+        if(p.getWood()<1 || p.getClay()<1){System.out.println("Not enough resources");}
+        else{
+          p.modifyWood(-1);
+          p.modifyClay(-1);
+          List<Edge> roads = getBoard().getAdjacents(p.getCurrent());
+          for(int i = 0; i<roads.size(); i++){
+            if(roads.get(i).playerRoad != 0){roads.remove(i);i--;}
+            else{System.out.println(roads.get(i));}
+          }
+          userNum = scanCheck(roads.size()+1, "Choose a road to build\n: ", scanner);
+          roads.get(userNum-1).playerRoad = current;
+        }
+        break;
+      case 2: // build Settlement
+        if(p.getCurrent().getStructure().equals("")){
+           if(p.getWood()<1 || p.getClay()<1 || p.getSheep()<1 || p.getWheat()<1){System.out.println("Not enough resources");}
+           else{
+             p.modifyWood(-1);
+             p.modifyClay(-1);
+             p.modifySheep(-1);
+             p.modifyWheat(-1);
+             p.getCurrent().setStructure("Settlement");
+             p.score++;
+           }
+        }
+        else{System.out.println("There's already a structure here");}
+        break;
+      case 3: // build City
+        if(p.getCurrent().getStructure().equals("Settlement")){
+           if(p.getStone()<3 || p.getWheat()<2){System.out.println("Not enough resources");}
+           else{
+             p.modifyStone(-3);
+             p.modifyWheat(-2);
+             p.getCurrent().setStructure("City");
+             p.score++;
+           }
+        }
+        else{System.out.println("You do not have a Settlement here");}
+        break;
+      default:
+        
+    }
   }
   
   public static void checkNearestSettlement(){ //ToDo
