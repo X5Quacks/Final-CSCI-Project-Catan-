@@ -9,6 +9,7 @@ Aaron TODO:
 - next player goes
 - LongestRoad()
 - build player option
+- @tests
 
 Colton TODO:
 - check nearest settlement player option
