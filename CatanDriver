@@ -1,10 +1,10 @@
-//Update(Aaron, 11/22/2025)
+//Update(Aaron, 11/23/2025)
 import java.util.*;
 import java.io.*;
 
 /*
  * play game
- * "Oh yeah, it's all coming together"
+ * please work
  */
 public class CatanDriver{
   
@@ -35,17 +35,17 @@ public class CatanDriver{
     int current = 1; //current player
     
     //TODO testing purposes only
-    getPlayer(1).modifyWood(5);
-    getPlayer(1).modifyClay(5);
-    getPlayer(1).modifyWheat(5);
-    getPlayer(1).modifySheep(5);
-    getPlayer(1).modifyStone(5);
+    getPlayer(1).modifyResource("wood", 5);
+    getPlayer(1).modifyResource("wheat", 5);
+    getPlayer(1).modifyResource("clay", 5);
+    getPlayer(1).modifyResource("stone", 5);
+    getPlayer(1).modifyResource("sheep", 5);
     
-    //TODO resources die roll
+    cd.generateResources();
     while(getPlayer(1).getScore() < 5 && getPlayer(2).getScore() < 5){
       int endTurn = userTurnSelection(current);
       if(endTurn == 5){
-        //TODO resources die roll
+        cd.generateResources();
         if(current==1){current++;}
         else{current--;}
       }
@@ -131,12 +131,45 @@ public class CatanDriver{
     }
     return userNum;
   }
-  
+   
+  /*
+   * rolls 2 dice
+   * @return int as the total of the 2 dice added together
+   */
   public static int diceRoll(){ 
     int dice1 = random.nextInt(6) + 1;
     int dice2 = random.nextInt(6) + 1;
     return dice1 + dice2;
   }
+  
+  /*
+   * generate the resources for the start of the turn
+   */
+  public void generateResources(){
+    int dice = diceRoll();
+    System.out.println("dice: " + dice);
+    if(dice == 7){/*robber*/}
+    Map<Node, List<Hexagon>> resources = getBoard().getResources();
+    for(Node node : resources.keySet()){
+      String structure = node.getStructure();
+      if(!structure.equals("")){
+        for(Hexagon hex : resources.get(node)){
+          if(hex.getResourceNumber() == dice && !(hex.getRobberStatus())){
+            
+            Player p = getPlayer(node.getPlayerControl());
+            String resource = hex.getResourceType();
+            
+            switch (structure) {
+              case "Settlement":
+                System.out.println(node + " generated 1 " + resource);
+                p.modifyResource(resource, 1);
+                break;
+              case "City":
+                System.out.println(node + " generated 2 " + resource);
+                p.modifyResource(resource, 2);
+                break;
+              default:
+                break;}}}}}}
   
   public static void move(){ //ToDo
     
@@ -155,8 +188,8 @@ public class CatanDriver{
       case 1: // build Road
         if(p.getWood()<1 || p.getClay()<1){System.out.println("Not enough resources");}
         else{
-          p.modifyWood(-1);
-          p.modifyClay(-1);
+          p.modifyResource("wood", -1);
+          p.modifyResource("clay", -1);
           List<Edge> roads = getBoard().getAdjacents(p.getCurrent());
           for(int i = 0; i<roads.size(); i++){
             if(roads.get(i).playerRoad != 0){roads.remove(i);i--;}
@@ -170,10 +203,10 @@ public class CatanDriver{
         if(p.getCurrent().getStructure().equals("")){
            if(p.getWood()<1 || p.getClay()<1 || p.getSheep()<1 || p.getWheat()<1){System.out.println("Not enough resources");}
            else{
-             p.modifyWood(-1);
-             p.modifyClay(-1);
-             p.modifySheep(-1);
-             p.modifyWheat(-1);
+             p.modifyResource("wood", -1);
+             p.modifyResource("clay", -1);
+             p.modifyResource("sheep", -1);
+             p.modifyResource("wheat", -1);
              p.getCurrent().setStructure("Settlement");
              p.score++;
            }
@@ -184,8 +217,8 @@ public class CatanDriver{
         if(p.getCurrent().getStructure().equals("Settlement")){
            if(p.getStone()<3 || p.getWheat()<2){System.out.println("Not enough resources");}
            else{
-             p.modifyStone(-3);
-             p.modifyWheat(-2);
+             p.modifyResource("stone", -3);
+             p.modifyResource("wheat", -2);
              p.getCurrent().setStructure("City");
              p.score++;
            }
