@@ -4,11 +4,8 @@
 
 
 Aaron TODO:
-- roll dice
-- end turn
-- next player goes
+- Mr. Robber
 - LongestRoad()
-- build player option
 - @tests
 
 Colton TODO:
