@@ -1,4 +1,5 @@
 /*
+ * Updated: Aaron Strunk 11/23/2025
  * tracks a player's resources and current location
  */
 public class Player{
@@ -28,6 +29,33 @@ public class Player{
     return current;
   }
   
+  /*
+   * modify the amount of resources the Player has
+   * @param resource as String as which resource type to modify
+   * @param modify as int as the amount of resource to modify by
+   */
+  public void modifyResource(String resource, int modify){
+    switch (resource){
+      case "wood":
+        this.wood = wood + modify;
+        break;
+      case "clay":
+        this.clay = clay + modify;
+        break;
+      case "wheat":
+        this.wheat = wheat + modify;
+        break;
+      case "sheep":
+        this.sheep = sheep + modify;
+        break;
+      case "stone":
+        this.stone = stone + modify;
+        break;
+      default:
+        break;
+    }
+  }
+  
   /**
    * returns the amount of wood the player has
    * @return int the total wood the Player has
@@ -35,29 +63,13 @@ public class Player{
   public int getWood(){
     return wood;
   }
-  
-  /*
-   * modify the amount of wood the player has
-   * @param modify as int as the amount of wood to modify by
-   */
-  public void modifyWood(int modify){
-    this.wood = getWood() + modify;
-  }
-  
+
   /**
    * returns the amount of stone the player has
    * @return int the total stone the Player has
    */
   public int getStone(){
     return stone;
-  }
-  
-  /*
-   * modify the amount of stone the player has
-   * @param modify as int as the amount of stone to modify by
-   */
-  public void modifyStone(int modify){
-    this.stone = getStone() + modify;
   }
   
   /**
@@ -68,28 +80,12 @@ public class Player{
     return sheep;
   }
   
-  /*
-   * modify the amount of sheep the player has
-   * @param modify as int as the amount of sheep to modify by
-   */
-  public void modifySheep(int modify){
-    this.stone = getSheep() + modify;
-  }
-  
   /**
    * returns the amount of clay the player has
    * @return int the total clay the Player has
    */
   public int getClay(){
     return clay;
-  }
-  
-  /*
-   * modify the amount of clay the player has
-   * @param modify as int as the amount of clay to modify by
-   */
-  public void modifyClay(int modify){
-    this.clay = getClay() + modify;
   }
   
   /**
@@ -101,19 +97,19 @@ public class Player{
   }
   
   /*
-   * modify the amount of wheat the player has
-   * @param modify as int as the amount of wheat to modify by
-   */
-  public void modifyWheat(int modify){
-    this.clay = getWheat() + modify;
-  }
-
-  /*
    * get the score of the player
    * @return int as the score of the player
    */
   public int getScore(){
-    return score;
+    return score + isLongestRoad();
   }
   
+  /*
+   * does this player have the Longest Road
+   * @return int as 2 if yes or 0 if no
+   */
+  public int isLongestRoad(){
+    //TODO
+    return 2;
+  }
 }
