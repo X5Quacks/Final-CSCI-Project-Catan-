@@ -1,0 +1,86 @@
+//Updated: Aaron Strunk 11/24/2025
+import org.junit.*;
+import java.io.*;
+
+public class TestGameObjects{
+  
+  Node start;
+  Node end;
+  Player player;
+  Hexagon hex;
+  Board board;
+  CatanDriver cd;
+  
+  
+  @Before
+  public void testSetup() throws IOException{
+    start = new Node("A");
+    end = new Node("Z");
+    player = new Player(start);
+    hex = new Hexagon("stone", 5);
+    board = new Board();
+    cd = new CatanDriver();
+  }
+  
+  @Test
+  public void testNodeGet(){
+    Assert.assertEquals("A", start.getName());
+    Assert.assertEquals(0, start.getPlayerControl());
+    Assert.assertEquals("", start.getStructure());
+  }
+  
+  @Test
+  public void testNodeSet(){
+    start.setStructure("Settlement");
+    Assert.assertEquals("Settlement", start.getStructure());
+  }
+  
+  @Test
+  public void testPlayerGet(){
+    Assert.assertEquals(start, player.getCurrent());
+    Assert.assertEquals(0, player.getWood());
+    Assert.assertEquals(0, player.getSheep());
+    Assert.assertEquals(0, player.getScore()); //breaks while longestRoad() isn't built
+  }
+  
+  @Test
+  public void testPlayerSet(){
+    player.modifyResource("wheat", 2);
+    Assert.assertEquals(2, player.getWheat());
+  }
+  
+    @Test
+  public void testHexagonGet(){
+    Assert.assertEquals("stone", hex.getResourceType());
+    Assert.assertEquals(5, hex.getResourceNumber());
+    Assert.assertEquals(false, hex.getRobberStatus());
+  }
+  
+  @Test
+  public void testHexSet(){
+    hex.setRobberStatus(true);
+    Assert.assertEquals(true, hex.getRobberStatus());
+  }
+  
+  @Test
+  public void testBoardGet(){
+    Assert.assertTrue(board.getRoads().size() > 1);
+    Assert.assertTrue(board.getResources().size() > 1);
+    Assert.assertEquals(start.getName(), board.getNode("A").getName());
+    Assert.assertEquals(null, board.getNode("ZAA"));
+    Assert.assertTrue(board.getAdjacents(board.getNode("A")).size() == 3);
+  }
+  
+  @Test
+  public void testAddEdge(){
+    board.addEdge(board.getNode("A"), board.getNode("I"), 0);
+    Assert.assertTrue(board.getAdjacents(board.getNode("A")).size() == 4);
+  }
+  
+  @Test
+  public void testCatanGet(){
+    Assert.assertTrue(cd.getBoard() != null);
+    Assert.assertTrue(cd.getPlayer(1) != null);
+    Assert.assertTrue(cd.getPlayer(2) != null);
+  }
+}
