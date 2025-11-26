@@ -5,7 +5,8 @@
 
 Aaron TODO:
 - Mr. Robber
-- LongestRoad()
+- LongestRoad() may break at longer road counts
+- larger Map breaks at a certain spot (similar issue to F loop)
 
 Colton TODO:
 - check nearest settlement player option
