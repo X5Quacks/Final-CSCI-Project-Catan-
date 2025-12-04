@@ -1,7 +1,11 @@
 /*
- * Updated: Aaron Strunk 11/23/2025
+ * Updated (12/3/2025) - Aaron
  * tracks a player's resources and current location
  */
+
+import java.util.*;
+import java.io.*;
+
 public class Player{
   int wood;
   int stone;
@@ -97,19 +101,39 @@ public class Player{
   }
   
   /*
-   * get the score of the player
+   * get the score of the player (without LongestRoad)
    * @return int as the score of the player
    */
   public int getScore(){
-    return score + isLongestRoad();
+    return score;
   }
   
   /*
-   * does this player have the Longest Road
-   * @return int as 2 if yes or 0 if no
+   * get which resources the Player has
+   * @return List<String> as the resources the Plyaer has at least 1 of
    */
-  public int isLongestRoad(){
-    //TODO
-    return 2;
+  public List<String> getAvailableResources(){
+    List<String> myList = new ArrayList<String>();
+    //wheat
+    if(getWheat()>0){
+      myList.add("wheat");
+    }
+    //stone
+    if(getStone()>0){
+      myList.add("stone");
+    }
+    //clay
+    if(getClay()>0){
+      myList.add("clay");
+    }
+    //sheep
+    if(getSheep()>0){
+      myList.add("sheep");
+    }
+    //wood
+    if(getWood()>0){
+      myList.add("wood");
+    }
+    return myList;
   }
 }
