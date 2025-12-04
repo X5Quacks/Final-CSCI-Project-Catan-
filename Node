@@ -1,4 +1,5 @@
 /*
+ * Updated (12/3/2025) - Aaron
  * settlements, cities, or anything else we choose
  */
 public class Node{
@@ -11,8 +12,7 @@ public class Node{
    this.structure = "";
    this.name = name;
  }
-
-//Updated 11/20/2025 Aaron added toString() and getName()
+ 
    /**
    * Returns a string representation of this Node
    * @return a string in the format "(name: structure)"
@@ -28,5 +28,38 @@ public class Node{
    */
   public String getName(){
     return name;
+  }
+  
+  /**
+   * returns which Player controls the Node (0 = no control)
+   * @return int which Player controls the Node
+   */
+  public int getPlayerControl(){
+    return playerControl;
+  }
+  
+  /*
+   * returns the structure on this Node (settlement, city, more in the future)
+   * @return String as the name of the structure
+   */
+  public String getStructure(){
+    return structure;
+  }
+  
+  /*
+   * sets the structure on this Node (settlement, city, more in the future)
+   * @param String as the name of the structure being built
+   */
+  public void setStructure(String structure){
+    this.structure = structure;
+  }
+  
+    
+  /*
+   * sets the control on this Node to the current Player
+   * @param int as the current Player
+   */
+  public void setPlayerControl(int playerControl){
+    this.playerControl = playerControl;
   }
 }
