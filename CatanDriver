@@ -199,8 +199,20 @@ public class CatanDriver{
                 default:
                   break;}}}}}}}
   
-  public static void move(){ //ToDo
-    
+  public static void move(){
+    Player p = getPlayer(current);
+    List<Edge> roads = getBoard().getAdjacents(p.getCurrent());
+    for(int i = 0; i<roads.size(); i++){
+      if(roads.get(i).getPlayerRoad() == 0){roads.remove(i);i--;}
+      else{System.out.println(roads.get(i));}
+    }
+    if(roads.size() == 0){
+      System.out.println("There are no roads");
+    }
+    else{
+      int userNum = scanCheck(roads.size()+1, "Choose a road to move along\n: ", scanner);
+      p.setCurrent(roads.get(userNum-1).getNode());
+    }
   }
   
   /*
