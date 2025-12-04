@@ -1,4 +1,4 @@
-//Updated 11/14/25 - Colton
+//Updated 12/3/25 - Aaron
 public class Hexagon {
   private String resourceType;
   private int resourceNumber;
@@ -14,6 +14,7 @@ public class Hexagon {
     this.resourceNumber = -1;
     this.robberStatus = true;
   }
+  
   
   /**
    * returns the resourceType
@@ -47,4 +48,12 @@ public class Hexagon {
     this.robberStatus = status;
   }
   
+  /**
+   * Returns a string representation of this Hexagon
+   * @return a string in the format "(type(number))"
+   */
+  @Override
+  public String toString() {
+    return resourceType + "(" + resourceNumber + ")";
+  }
 }
