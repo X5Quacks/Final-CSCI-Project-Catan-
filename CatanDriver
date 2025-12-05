@@ -214,16 +214,18 @@ public class CatanDriver{
   public static void move(Scanner scanner, int current){
     Player p = getPlayer(current);
     List<Edge> roads = getBoard().getAdjacents(p.getCurrent());
-    System.out.println(roads);
+
+    boolean roadExist = false;
     for(int i = 0; i<roads.size(); i++){
-      if(roads.get(i).getPlayerRoad() == 0){roads.remove(i);i--;}
-      else{System.out.println(roads.get(i));}
+      if(roads.get(i).getPlayerRoad() != 0){
+        System.out.println("#" + (i+1) + " - " + roads.get(i));
+        roadExist = true;
+      }
     }
-    if(roads.size() == 0){
+    if(!roadExist){
       System.out.println("There are no roads");
     }
     else{
-      System.out.println(roads);
       int userNum = scanCheck(roads.size()+1, "Choose a road to move along\n: ", scanner);
       p.setCurrent(roads.get(userNum-1).getNode());
     }
@@ -246,8 +248,8 @@ public class CatanDriver{
           p.modifyResource("clay", -1);
           List<Edge> roads = getBoard().getAdjacents(p.getCurrent());
           for(int i = 0; i<roads.size(); i++){
-            if(roads.get(i).getPlayerRoad() != 0){roads.remove(i);i--;}
-            else{System.out.println(roads.get(i));}
+            if(roads.get(i).getPlayerRoad() == 0){
+              System.out.println("#" + (i+1) + " - " + roads.get(i));}
           }
           buildNum = scanCheck(roads.size()+1, "Choose a road to build\n: ", scanner);
           Edge road = roads.get(buildNum-1);
@@ -256,14 +258,13 @@ public class CatanDriver{
           List<Edge> opposites = getBoard().getAdjacents(road.getNode()); //builds the road from the other direction
           int indexOfOpposite = -1;
           for(int i = 0; i < opposites.size(); i++){
-            Node destination = opposites.get(i).getNode();
-            if(destination==p.getCurrent()){
+            if(opposites.get(i).getNode()==p.getCurrent()){
               indexOfOpposite = i;
             }
           }
           //System.out.println(indexOfOpposite); //index of which Edge this corresponds to
-          Edge opposite = opposites.get(indexOfOpposite);
-          opposite.setPlayerRoad(current); 
+          opposites.get(indexOfOpposite).setPlayerRoad(current); 
+
         }
         break;
       case 2: // build Settlement
