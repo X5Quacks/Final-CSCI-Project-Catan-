@@ -1,5 +1,3 @@
-//Updated 11/21/2025 Aaron
-
 import java.util.*;
 import java.io.*;
 
@@ -10,11 +8,12 @@ public class Board{
   
   //Lists for Board creation
   private final List<Node> explored = new ArrayList<Node>();
-  //List<String> hexList = Arrays.asList(wheat, wheat, wheat, wheat, stone, stone, stone, brick, brick, brick, sheep, sheep, sheep, sheep, wood, wood, wood, wood);
-  //List<int> numberList = Arrays.asList(2, 3, 3, 4, 4, 5, 5, 6, 6, 8, 8, 9, 9, 10, 10, 11, 11, 12);
-  private List<String> hexList = new ArrayList<>(Arrays.asList("wheat", "stone", "brick", "sheep", "wood", "wood"));
-  private List<Integer> numberList = new ArrayList<>(Arrays.asList(4, 5, 6, 8, 9, 10));
+  private List<String> hexList = new ArrayList<>(Arrays.asList("wheat", "wheat", "wheat", "wheat", "stone", "stone", "stone", "brick", "brick", "brick", "sheep", "sheep", "sheep", "sheep", "wood", "wood", "wood", "wood"));
+  private List<Integer> numberList = new ArrayList<>(Arrays.asList(2, 3, 3, 4, 4, 5, 5, 6, 6, 8, 8, 9, 9, 10, 10, 11, 11, 12));
   
+  //Updated with gui list 12/4/2025
+  private List<Hexagon> guiHexes = new ArrayList<Hexagon>();
+
   //RANDOM
   private final Random r = new Random();
   
@@ -23,7 +22,7 @@ public class Board{
     Scanner input = new Scanner(new File("buildFile.txt"));
     
     //Create the Nodes
-    for(int i = 0; i < 24; i++){
+    for(int i = 0; i < 54; i++){
       String name = input.nextLine();
       Node e = new Node(name);
       getRoads().put(e, new ArrayList<Edge>());
@@ -42,7 +41,14 @@ public class Board{
     Hexagon r1 = new Hexagon(getHexList().remove(r().nextInt(getHexList().size())), getNumberList().remove(r().nextInt(getNumberList().size())));
     Hexagon r2 = new Hexagon(getHexList().remove(r().nextInt(getHexList().size())), getNumberList().remove(r().nextInt(getNumberList().size())));
     
-    assignHexes(getNode("A"), desert, r1, r2); //recursive call  
+    //Add Hexagons so that the gui can display the map
+    //Updated with gui list 12/4/2025
+    guiHexes.add(desert);
+    guiHexes.add(r1);
+    guiHexes.add(r2);
+    
+    
+    assignHexes(getNode("A"), desert, r1, r2); //recursive call
   }
   /*
    * gets the board connections between Nodes and Edges
@@ -59,6 +65,17 @@ public class Board{
   public Map<Node, List<Hexagon>> getResources(){
     return this.resources;
   }
+  
+  /*
+   * 
+   * Updated with gui list 12/4/2025
+   * gets the board Hexagons in the order for the gui
+   * @return List<Hexagon> as the Hexagons for the gui map
+   */
+  public List<Hexagon> getGuiHexes(){
+    return this.guiHexes;
+  }
+  
   
   /*
    * add an Edge between two Nodes
@@ -150,8 +167,18 @@ public class Board{
    * @param hex_2 as Hexagon as the second resource hex
    */
   public void assignHexes(Node n, Hexagon hex_1, Hexagon hex_2){
+    System.out.println(n);
     if(!explored.contains(n)){
       if(hexList.isEmpty()){
+        resources.get(n).add(hex_1);
+        resources.get(n).add(hex_2);
+        explored.add(n);
+        List<Edge> adjacents = getAdjacents(n);
+
+        assignHexes(adjacents.get(1).getNode(), hex_1);
+        assignHexes(adjacents.get(2).getNode(), hex_2);
+      }
+      else{
         resources.get(n).add(hex_1);
         resources.get(n).add(hex_2);
         explored.add(n);
@@ -162,19 +189,12 @@ public class Board{
           assignHexes(adjacents.get(2).getNode(), hex_2, start);
         }
         else{
-          assignHexes(adjacents.get(1).getNode(), hex_1);
-          assignHexes(adjacents.get(2).getNode(), hex_2);
+          Hexagon r3 = new Hexagon(hexList.remove(r.nextInt(hexList.size())), numberList.remove(r.nextInt(numberList.size())));
+          guiHexes.add(r3); //add Hexagon for the gui to find
+          resources.get(n).add(r3);
+          assignHexes(adjacents.get(1).getNode(), hex_1, r3);
+          assignHexes(adjacents.get(2).getNode(), hex_2, r3);
         }
-      }
-      else{
-        Hexagon r3 = new Hexagon(hexList.remove(r.nextInt(hexList.size())), numberList.remove(r.nextInt(numberList.size())));
-        resources.get(n).add(hex_1);
-        resources.get(n).add(hex_2);
-        resources.get(n).add(r3);
-        explored.add(n);
-        List<Edge> adjacents = getAdjacents(n);
-        assignHexes(adjacents.get(1).getNode(), hex_1, r3);
-        assignHexes(adjacents.get(2).getNode(), hex_2, r3);
       }
     }
   }
