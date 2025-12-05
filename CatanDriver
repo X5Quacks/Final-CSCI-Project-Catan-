@@ -4,6 +4,7 @@ import java.io.*;
 
 /*
  * play game
+ * please work
  */
 public class CatanDriver{
   
@@ -33,27 +34,33 @@ public class CatanDriver{
     
     int current = 1; //current player
     
+    Node a = getBoard().getNode("A");  
+    a.setPlayerControl(1); 
+    a.setStructure("Settlement");
+    Node d = getBoard().getNode("D");
+    d.setPlayerControl(2);
+    d.setStructure("Settlement");
+    
     //TODO testing purposes only
-    getPlayer(1).modifyResource("wood", 5);
-    getPlayer(1).modifyResource("wheat", 5);
-    getPlayer(1).modifyResource("clay", 5);
-    getPlayer(1).modifyResource("stone", 5);
-    getPlayer(1).modifyResource("sheep", 5);
-    getPlayer(2).modifyResource("wood", 5);
-    getPlayer(2).modifyResource("wheat", 5);
-    getPlayer(2).modifyResource("clay", 5);
-    getPlayer(2).modifyResource("stone", 5);
-    getPlayer(2).modifyResource("sheep", 5);
+    getPlayer(1).modifyResource("wood", 2);
+    getPlayer(1).modifyResource("wheat", 2);
+    getPlayer(1).modifyResource("clay", 2);
+    getPlayer(1).modifyResource("stone", 2);
+    getPlayer(1).modifyResource("sheep", 2);
+    getPlayer(2).modifyResource("wood", 2);
+    getPlayer(2).modifyResource("wheat", 2);
+    getPlayer(2).modifyResource("clay", 2);
+    getPlayer(2).modifyResource("stone", 2);
+    getPlayer(2).modifyResource("sheep", 2);
     
     cd.generateResources(1);
-    while(cd.getScore(1) < 5 && cd.getScore(2) < 5){
+    while(cd.getScore(1) < 10 && cd.getScore(2) < 10){
       int endTurn = userTurnSelection(current);
       if(endTurn == 5){
         if(current==1){current++;}
         else{current--;}
         cd.generateResources(current);
       }
-      System.out.println(cd.getScore(current));
       cd.getPlayer(current).score++; //TODO remove before final game
     }
   }
@@ -118,7 +125,7 @@ public class CatanDriver{
     
     switch (userNum) {
       case 1:
-        
+        move(scanner,current);
         break;
       case 2:
         build(scanner, current);
@@ -199,9 +206,15 @@ public class CatanDriver{
                 default:
                   break;}}}}}}}
   
-  public static void move(){
+  /*
+   * allow the player to move their player piece
+   * @param Scanner as player input
+   * @param current as int as the current Player
+   */
+  public static void move(Scanner scanner, int current){
     Player p = getPlayer(current);
     List<Edge> roads = getBoard().getAdjacents(p.getCurrent());
+    System.out.println(roads);
     for(int i = 0; i<roads.size(); i++){
       if(roads.get(i).getPlayerRoad() == 0){roads.remove(i);i--;}
       else{System.out.println(roads.get(i));}
@@ -210,6 +223,7 @@ public class CatanDriver{
       System.out.println("There are no roads");
     }
     else{
+      System.out.println(roads);
       int userNum = scanCheck(roads.size()+1, "Choose a road to move along\n: ", scanner);
       p.setCurrent(roads.get(userNum-1).getNode());
     }
@@ -221,10 +235,10 @@ public class CatanDriver{
    * @param current as int as the current Player
    */
   public static void build(Scanner scanner, int current){
-    int userNum = scanCheck(4, "What do you want to build?\n1) Road\n2) Settlement\n3) City\n: ", scanner);
+    int buildNum = scanCheck(4, "What do you want to build?\n1) Road\n2) Settlement\n3) City\n: ", scanner);
 
     Player p = getPlayer(current);
-    switch (userNum) {
+    switch (buildNum) {
       case 1: // build Road
         if(p.getWood()<1 || p.getClay()<1){System.out.println("Not enough resources");}
         else{
@@ -235,8 +249,21 @@ public class CatanDriver{
             if(roads.get(i).getPlayerRoad() != 0){roads.remove(i);i--;}
             else{System.out.println(roads.get(i));}
           }
-          userNum = scanCheck(roads.size()+1, "Choose a road to build\n: ", scanner);
-          roads.get(userNum-1).setPlayerRoad(current);
+          buildNum = scanCheck(roads.size()+1, "Choose a road to build\n: ", scanner);
+          Edge road = roads.get(buildNum-1);
+          road.setPlayerRoad(current); //builds the road from your direction
+          
+          List<Edge> opposites = getBoard().getAdjacents(road.getNode()); //builds the road from the other direction
+          int indexOfOpposite = -1;
+          for(int i = 0; i < opposites.size(); i++){
+            Node destination = opposites.get(i).getNode();
+            if(destination==p.getCurrent()){
+              indexOfOpposite = i;
+            }
+          }
+          //System.out.println(indexOfOpposite); //index of which Edge this corresponds to
+          Edge opposite = opposites.get(indexOfOpposite);
+          opposite.setPlayerRoad(current); 
         }
         break;
       case 2: // build Settlement
@@ -273,7 +300,7 @@ public class CatanDriver{
   }
   
   public static void Trade(){ //ToDo
-    
+    //eh, this one can be skipped
   }
   
   /*
@@ -282,7 +309,7 @@ public class CatanDriver{
    * @return int as the score of the player
    */
   public int getScore(int player){
-    return getPlayer(player).getScore() + isLongestRoad(player);
+    return getPlayer(player).getScore(); //+ isLongestRoad(player);
   }
   
   /*
@@ -314,7 +341,7 @@ public class CatanDriver{
       
       Collection<Double> distances = dist.values();
       Double distance1 = Collections.max(distances); //convert the Map into a max distance and print them
-      System.out.println(distances+"    "+distance1);
+      //System.out.println(distances+"    "+distance1);
       
       if(player==1){player++;}
       else{player--;} //switch Player and clear
@@ -341,12 +368,11 @@ public class CatanDriver{
       
       distances = dist.values();
       Double distance2 = Collections.max(distances);
-      System.out.println(distances+"    "+distance2);
+      //System.out.println(distances+"    "+distance2);
       
       if(distance1>distance2){
          return 2;}
       else{
          return 0;}
-      //return 0;
   }
 }
