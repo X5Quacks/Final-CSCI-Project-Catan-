@@ -28,7 +28,22 @@ public class Edge implements Comparable<Edge>{
   public Node getNode(){
     return destination;
   }
+ 
+  /*
+   * gets the weight of this Edge
+   * @return Node
+   */
+  public double getWeight(){
+    return weight;
+  }
   
+  /*
+   * sets the weight of this Edge (tracks if road for Dijkstras)
+   * @param int as the new weight
+   */
+  public void setWeight(double weight){
+    this.weight = weight;
+  }
    
   /*
    * gets which Player controls this Edge
