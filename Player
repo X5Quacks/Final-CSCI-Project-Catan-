@@ -1,5 +1,4 @@
 /*
- * Updated (12/3/2025) - Aaron
  * tracks a player's resources and current location
  */
 
@@ -22,7 +21,7 @@ public class Player{
     this.clay = 0;
     this.wheat = 0;
     this.current = current;
-    this.score = 0;
+    this.score = 1;
   }
   
   /**
@@ -31,6 +30,14 @@ public class Player{
    */
   public Node getCurrent(){
     return current;
+  }
+  
+  /**
+   * moves the current Node the Player is at
+   * @param node as Node as the player's new location
+   */
+  public void setCurrent(Node node){
+    this.current = node;
   }
   
   /*
