@@ -29,6 +29,23 @@ public class Edge implements Comparable<Edge>{
     return destination;
   }
   
+   
+  /*
+   * gets which Player controls this Edge
+   * @return playerRoad
+   */
+  public int getPlayerRoad(){
+    return playerRoad;
+  }
+  
+  /*
+   * sets the control of this Edge to the current Player
+   * @param int as the current Player
+   */
+  public void setPlayerRoad(int playerRoad){
+    this.playerRoad = playerRoad;
+  }
+  
   /**
    * Returns a string representation of this edge, including
    * its destination vertex and weight.
@@ -78,4 +95,3 @@ public class Edge implements Comparable<Edge>{
     return Double.compare(this.weight, other.weight);
   }
 }
-
