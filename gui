@@ -6,8 +6,13 @@ import java.util.*;
 public class gui extends JPanel {
   
   private static JFrame frame = new JFrame("Catan");
+  private static Color forestGreen = new Color(34, 139, 34);
+  private static Color maroon = new Color(160, 0, 0);
+  private static Color wheet = new Color(255, 223, 0);
+  private static Color sand = new Color(194, 178, 128);
+  
   private int centerX = 400; 
-  private int centerY = 200; 
+  private int centerY = 150; 
   private int radius = 80;   
   private int Horizontalspacing = 139;
   private int Verticalspacing = 120;
@@ -53,7 +58,6 @@ public class gui extends JPanel {
     
     finalNumbers.addAll(tileNumbers);
     finalNumbers.add(9, " ");
-    System.out.print(finalNumbers);
     
     IDK(frame);
   }
@@ -100,24 +104,23 @@ public class gui extends JPanel {
     }
   }
   
-// Makes a tile
   private void paintHex(Graphics2D grafic, Shape hex, String type) {
     
     switch (type) {
       case "Forest":
-        grafic.setColor(Color.GREEN);
+        grafic.setColor(forestGreen);
         break;
         
       case "Pasture":
-        grafic.setColor(Color.LIGHT_GRAY);
+        grafic.setColor(Color.GREEN);
         break;
         
       case "Field":
-        grafic.setColor(Color.YELLOW);
+        grafic.setColor(wheet);
         break;
         
       case "Hill":
-        grafic.setColor(Color.ORANGE);
+        grafic.setColor(maroon);
         break;
         
       case "Mountain":
@@ -125,7 +128,7 @@ public class gui extends JPanel {
         break;
         
       default: // Desert
-        grafic.setColor(Color.BLACK);
+        grafic.setColor(sand);
         break;
     }
     
@@ -197,7 +200,7 @@ public class gui extends JPanel {
     // __________ Row 5 (3 tiles) __________
     for (int i = 0; i < Horizontalspacing * 3; i += Horizontalspacing) {
       Make_Label(frame, centerX + i, centerY + Verticalspacing * 4, index++);
-    }
+    }  
 }
   
   public static void main(String[] args) {
