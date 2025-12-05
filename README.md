@@ -5,9 +5,8 @@
 
 Aaron TODO:
 - Mr. Robber does not remove old robber (not sure if remove old robber or let Player fight robbers)
-- LongestRoad() may break at longer road counts
-- larger Map breaks at a certain spot (similar issue to F loop)
-- what is this error for building roads
+- LongestRoad() breaks entirely
+- larger Map breaks at a certain spot (loop breaks at S)
 
 Colton TODO:
 - check nearest settlement player option
