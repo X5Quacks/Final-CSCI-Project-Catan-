@@ -298,8 +298,34 @@ public class CatanDriver{
         break;
     }}
   
-  public static void checkNearestSettlement(){ //ToDo
-    
+    public static Node checkNearestSettlement(int current){ //ToDo
+    List<Node> order = new ArrayList<Node>();
+    Set<Node> visited = new HashSet<Node>();
+    Queue<Node> q = new LinkedList<Node>();
+    Player player = getPlayer(current);
+    q.add(player.getCurrent());
+    boolean foundSettlement = true;
+    Node visit = null;
+    while(!q.isEmpty() && foundSettlement){
+      
+      visit = q.remove();
+      //System.out.print(visit + " ");
+      
+      if(!visited.contains(visit) && !visit.getStructure().equals("Settlement")){
+        visited.add(visit);
+        order.add(visit);
+        
+        for(Edge e : getBoard().getAdjacents(visit)) {
+          if(!visited.contains(e.getNode())){
+            q.add(e.getNode());
+          }
+        }
+      }
+      else{
+        foundSettlement = false;
+      }
+    }
+    return visit;
   }
   
   public static void Trade(){ //ToDo
