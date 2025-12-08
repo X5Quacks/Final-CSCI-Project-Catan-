@@ -117,6 +117,14 @@ public class Player{
   
   /*
    * get which resources the Player has
+   * @return String as a massive String of the resources the Player has
+   */
+  public String getAllResources(){
+    return ("You have ["+getWood()+" wood, "+getClay()+" clay, "+getSheep()+" sheep, "+getWheat()+" wheat, "+getStone()+" stone");
+  }
+  
+  /*
+   * get which resource types the Player has
    * @return List<String> as the resources the Plyaer has at least 1 of
    */
   public List<String> getAvailableResources(){
