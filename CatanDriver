@@ -1,4 +1,5 @@
-//Update(Aaron, 12/3/2025)
+//Update(Aaron, 12/7/2025)
+//added the README.md and cleaned up the print statements
 import java.util.*;
 import java.io.*;
 
@@ -53,15 +54,20 @@ public class CatanDriver{
     getPlayer(2).modifyResource("stone", 2);
     getPlayer(2).modifyResource("sheep", 2);
     
+    gui graphics = new gui();
+  
+  
+    
     cd.generateResources(1);
     while(cd.getScore(1) < 10 && cd.getScore(2) < 10){
+      System.out.println(cd.getPlayer(current).getAllResources());
       int endTurn = userTurnSelection(current);
-      if(endTurn == 5){
+      if(endTurn == 6){
         if(current==1){current++;}
         else{current--;}
         cd.generateResources(current);
         cd.getPlayer(current).score++; //TODO remove before final game
-        System.out.println("Player 1:  " + cd.getScore(1) +"  Player 2:  " + cd.getScore(2));
+        System.out.println("\nPlayer 1's score:  " + cd.getScore(1) +"  Player 2's score:  " + cd.getScore(2));
       }
     }
   }
@@ -115,14 +121,16 @@ public class CatanDriver{
    * (2) Build: build a road, settlement, or city
    * (3) Check Nearest Settlement: check how many moves the nearest settlement is away that you control
    * (4) Trade: if you are at a settlement you control, swap resources for other resources
-   * (5) End Turn: end your turn, roll the resource dice, and go to the next player
+   * (5) Fight a Robber: if there is a Robber on a Hexagon adjacent to you, roll 2 dice. If you get 7+, defeat the Robber. Otherwise, lose a random resource.
+   * (6) End Turn: end your turn, roll the resource dice, and go to the next player
    * @param current as int as the current Player
    * @return int as which option was chosen (if 5 it will end the turn)
    */
    public static int userTurnSelection(int current){
     Scanner scanner = new Scanner(System.in);
     boolean check = true;
-    int userNum = scanCheck(6, "\n1) Move\n2) Build\n3) Check nearest settlement\n4) Trade\n5) End Turn\n: ", scanner);
+    int userNum = scanCheck(7, "\n1) Move\n2) Build\n3) Check nearest settlement\n4) Trade\n5) Fight a Robber\n6) End Turn\n: ", scanner);
+    System.out.println("\n");
     
     switch (userNum) {
       case 1:
@@ -132,12 +140,15 @@ public class CatanDriver{
         build(scanner, current);
         break;
       case 3:
-        
+        System.out.println(checkNearestSettlement(current));
         break;
       case 4:
         
-        break;
+        break;  
       case 5:
+        fightRobber(current);
+        break;
+      case 6:
         System.out.println("Ending player " + current + "'s turn.");
         break;
       default:
@@ -162,7 +173,7 @@ public class CatanDriver{
    */
   public void generateResources(int current){
     int dice = diceRoll();
-    System.out.println("dice: " + dice);
+    System.out.print("a " + dice + " has been rolled. ");
     if(dice == 7){/*robber*/
       Set<Node> nodes = getBoard().getRoads().keySet();
       List<Node> myList = new ArrayList<Node>();
@@ -181,10 +192,10 @@ public class CatanDriver{
       String stolen = steal.get(random.nextInt(steal.size())); //steal a random resource from opponent
       getPlayer(current).modifyResource(stolen, 1); //add to you
       getPlayer(robbed.getPlayerControl()).modifyResource(stolen, -1); //take from your opponent
-      System.out.println("Robber placed on " + newRobber);
-      //ToDo will not remove the old robber not sure if remove old robber or have Player method to attack robbers
+      System.out.println("Robber placed on: " + newRobber);
     }
     else{ //generate resources
+      System.out.println("Generating resources.");
       Map<Node, List<Hexagon>> resources = getBoard().getResources();
       for(Node node : resources.keySet()){
         String structure = node.getStructure();
@@ -225,7 +236,7 @@ public class CatanDriver{
       }
     }
     if(!roadExist){
-      System.out.println("There are no roads");
+      System.out.println("There are no roads connected to you.");
     }
     else{
       int userNum = scanCheck(roads.size()+1, "Choose a road to move along\n: ", scanner);
@@ -240,7 +251,7 @@ public class CatanDriver{
    * @param current as int as the current Player
    */
   public static void build(Scanner scanner, int current){
-    int buildNum = scanCheck(4, "What do you want to build?\n1) Road\n2) Settlement\n3) City\n: ", scanner);
+    int buildNum = scanCheck(4, "What do you want to build?\n1) Road (costs 1 wood and 1 clay)\n2) Settlement (costs 1 wood, clay, sheep, and wheat)\n3) City (costs 2 wheat and 3 stone)\n: ", scanner);
 
     Player p = getPlayer(current);
     switch (buildNum) {
@@ -301,7 +312,7 @@ public class CatanDriver{
         break;
     }}
   
-    public static Node checkNearestSettlement(int current){ //ToDo
+  public static Node checkNearestSettlement(int current){
     List<Node> order = new ArrayList<Node>();
     Set<Node> visited = new HashSet<Node>();
     Queue<Node> q = new LinkedList<Node>();
@@ -312,7 +323,6 @@ public class CatanDriver{
     while(!q.isEmpty() && foundSettlement){
       
       visit = q.remove();
-      //System.out.print(visit + " ");
       
       if(!visited.contains(visit) && !visit.getStructure().equals("Settlement")){
         visited.add(visit);
@@ -334,6 +344,29 @@ public class CatanDriver{
   public static void Trade(){ //ToDo
     //eh, this one can be skipped
   }
+  
+  /*
+   * roll dice to fight Robbers adjacent to the current Player's location
+   * if the Player gets a 7+, they win and gain a resource. On a 6- they get robbed a resource
+   * @param current as int as the current Player
+   */
+  public static void fightRobber(int current){
+    Player player = getPlayer(current);
+    List<Hexagon> selection = getBoard().getResources().get(player.getCurrent()); //get Hexagons adjacent to your Node
+    for(Hexagon hex : selection){
+      if(hex.getRobberStatus()){
+        int attack = diceRoll();
+        if(attack >= 7){
+          hex.setRobberStatus(false);
+          player.modifyResource(hex.getResourceType(), 1);
+          System.out.println("You defeated the Robber and took 1 " + hex.getResourceType());
+        }
+        else{
+          List<String> steal = player.getAvailableResources(); //get the player's resources
+          String stolen = steal.get(random.nextInt(steal.size())); //steal a random resource
+          player.modifyResource(stolen, -1); //lose the resource
+          System.out.println("You lost against a Robber and lost 1 " + stolen);
+        }}}}
   
   /*
    * get the score of the player
@@ -409,57 +442,10 @@ public class CatanDriver{
           
     distances = dist.values();
     Double distance2 = Collections.min(distances); //convert the Map into a max distance and print them
-    //System.out.println(distances+"    "+distance2);
-    /*
-      for(Node v : getBoard().getRoads().keySet()){ //fill Map with NEGATIVE INFINITY to start
-        dist.put(v, Double.NEGATIVE_INFINITY);
-      }
-      while(!pq.isEmpty()){ //reverse of Dijkstras
-        Edge current = pq.poll();
-        Node v = current.destination;
-          for(Edge e : getBoard().getAdjacents(v)){
-            double totalDist = dist.get(v) + e.weight;
-            if(totalDist > dist.get(e.getNode()) && e.getPlayerRoad() == player){
-              dist.put(e.getNode(), totalDist);
-              pq.add(e);
-            }
-        }
-      }
-      
-      Collection<Double> distances = dist.values();
-      Double distance1 = Collections.max(distances); //convert the Map into a max distance and print them
-      //System.out.println(distances+"    "+distance1);
-      
-      if(player==1){player++;}
-      else{player--;} //switch Player and clear
-      dist.clear();
-      
-      for(Node v : getBoard().getRoads().keySet()){ //fill Map with NEGATIVE INFINITY again
-        dist.put(v, Double.NEGATIVE_INFINITY);
-      }
-      dist.put(getPlayer(player).getCurrent(), 0.0); //put current position in the Map TODO yes thats not how it works
-      pq = new PriorityQueue<Edge>();
-      pq.add(new Edge(getPlayer(player).getCurrent(), 0.0));
-      
-      while(!pq.isEmpty()){ //reverse of Dijkstras
-        Edge current = pq.poll();
-        Node v = current.destination;
-          for(Edge e : getBoard().getAdjacents(v)){
-            double totalDist = dist.get(v) + e.weight;
-            if(totalDist > dist.get(e.getNode()) && e.getPlayerRoad() == player){
-              dist.put(e.getNode(), totalDist);
-              pq.add(e);
-            }
-        }
-      }
-      
-      distances = dist.values();
-      Double distance2 = Collections.max(distances);
-      //System.out.println(distances+"    "+distance2);*/
-      
-      if(distance1<distance2){
-         return 2;}
-      else{
-         return 0;}
+    
+    if(distance1<distance2){
+      return 2;}
+    else{
+      return 0;}
   }
 }
