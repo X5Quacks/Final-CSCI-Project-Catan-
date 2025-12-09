@@ -13,5 +13,5 @@
 	[4] Trade resources if you are at a Settlement (this option is non-functional. we didn't make it yet)
 	[5] Fight a Robber adjacent to you
 	[6] End your turn
-6. after choosing an action, sometimes you will need to choose an option by inputting a number. Your options will be listed with a number following # (for example #2
+6. after choosing an action, sometimes you will need to choose an option by inputting a number. Your options will be listed with a number following # (for example #2 road F)
 7. keep in mind that if you move outside of the fist ring (Nodes A-F) the Nodes won't produce the same resources as they appear to 
