@@ -5,7 +5,7 @@ import java.util.*;
 
 public class gui extends JPanel {
   
-  private static JFrame frame = new JFrame("Catan");
+  public static JFrame frame;
   private static Color forestGreen = new Color(34, 139, 34);
   private static Color maroon = new Color(160, 0, 0);
   private static Color wheet = new Color(255, 223, 0);
@@ -22,46 +22,67 @@ public class gui extends JPanel {
   private ArrayList<String> tileTypes = new ArrayList<>(18);
   private ArrayList<String> finalTiles = new ArrayList<>(19);
   
+  private ArrayList<Integer> tileList = new ArrayList<>(Arrays.asList(9,10,11,8,5,4,12,7,6,0,3,13,18,2,1,4,17,16,15));
   
-  public gui() {
-    for(int i = 0; i < 4; i++){
-      tileTypes.add("Forest");
-      tileTypes.add("Pasture");
-      tileTypes.add("Field");
-      if(i >= 1){
-        tileTypes.add("Hill");
-        tileTypes.add("Mountain");
+  /**
+   * Sets up the tiles
+   */
+  public gui(JFrame frame, ArrayList<Hexagon> guiHexes) {
+    this.frame = frame;
+    for(int i = 0; i<tileList.size(); i++){
+      Hexagon hex = guiHexes.get(tileList.get(i));
+      finalTiles.add(hex.getResourceType());
+      if(hex.getResourceNumber() == -1){
+        finalNumbers.add(" ");
       }
-    }
-    
-    Collections.shuffle(tileTypes);
-    
-    finalTiles.addAll(tileTypes);
-    finalTiles.add(9, "Desert");
-    
-    for(int i = 0; i < 2; i++){
-      tileNumbers.add("3");
-      tileNumbers.add("4");
-      tileNumbers.add("5");
-      tileNumbers.add("6");
-      tileNumbers.add("8");
-      tileNumbers.add("9");
-      tileNumbers.add("10");
-      tileNumbers.add("11");
-      if(i >= 1){
-        tileNumbers.add("2");
-        tileNumbers.add("12");
+      else{
+        finalNumbers.add("" + hex.getResourceNumber());
       }
+      
     }
-    
-    Collections.shuffle(tileNumbers);
-    
-    finalNumbers.addAll(tileNumbers);
-    finalNumbers.add(9, " ");
+//    
+//    
+//    for(int i = 0; i < 4; i++){
+//      tileTypes.add("Forest");
+//      tileTypes.add("Pasture");
+//      tileTypes.add("Field");
+//      if(i >= 1){
+//        tileTypes.add("Hill");
+//        tileTypes.add("Mountain");
+//      }
+//    }
+//    
+//    Collections.shuffle(tileTypes);
+//    
+//    finalTiles.addAll(tileTypes);
+//    finalTiles.add(9, "Desert");
+//    
+//    for(int i = 0; i < 2; i++){
+//      tileNumbers.add("3");
+//      tileNumbers.add("4");
+//      tileNumbers.add("5");
+//      tileNumbers.add("6");
+//      tileNumbers.add("8");
+//      tileNumbers.add("9");
+//      tileNumbers.add("10");
+//      tileNumbers.add("11");
+//      if(i >= 1){
+//        tileNumbers.add("2");
+//        tileNumbers.add("12");
+//      }
+//    }
+//    
+//    Collections.shuffle(tileNumbers);
+//    
+//    finalNumbers.addAll(tileNumbers);
+//    finalNumbers.add(9, " ");
     
     IDK(frame);
   }
-  
+  /**
+   * Makes the board
+   * @param g is the graphics for painting on the screen
+   */
   @Override
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
@@ -103,27 +124,32 @@ public class gui extends JPanel {
       paintHex(grafic, hex, finalTiles.get(index++));
     }
   }
-  
+  /**
+   * Paints the hexagons to their respected tile type
+   * @param grafic is the graphics to paint
+   * @param hex is the hexagon object
+   * @param type is the type of tile it is
+   */
   private void paintHex(Graphics2D grafic, Shape hex, String type) {
     
     switch (type) {
-      case "Forest":
+      case "wood":
         grafic.setColor(forestGreen);
         break;
         
-      case "Pasture":
+      case "sheep":
         grafic.setColor(Color.GREEN);
         break;
         
-      case "Field":
+      case "wheat":
         grafic.setColor(wheet);
         break;
         
-      case "Hill":
+      case "brick":
         grafic.setColor(maroon);
         break;
         
-      case "Mountain":
+      case "stone":
         grafic.setColor(Color.GRAY);
         break;
         
@@ -159,7 +185,13 @@ public class gui extends JPanel {
     hex.closePath();
     return hex;
   }
-  
+  /**
+   * Makes the lables for the tiles
+   * @param frame is the frame the labels are being created on
+   * @param x is the x cords
+   * @param y is the y cords
+   * @param index is the number that being grabed from the array
+   */
   public void Make_Label(JFrame frame, int x, int y, int index) {
     String newNum = finalNumbers.get(index++);
     JLabel label = new JLabel(newNum);
@@ -173,7 +205,10 @@ public class gui extends JPanel {
     }
     frame.getContentPane().add(label);
   }
-  
+  /**
+   * Adds all the labels on the screen (named it idk because i didnt think it would work but it did so i kept it)
+   * @param frame is the JFrame that the labels are being added to
+   */
   public void IDK(JFrame frame){
   int index = 0; 
     
@@ -203,14 +238,14 @@ public class gui extends JPanel {
     }  
 }
   
-  public static void main(String[] args) {
-    SwingUtilities.invokeLater(() -> {
-      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-      frame.setSize(1100, 900);
-      frame.add(new gui());
-      frame.setLocationRelativeTo(null);
-      frame.setVisible(true);
-      
-    });
-  }
+//  public static void main(String[] args) {
+//    SwingUtilities.invokeLater(() -> {
+//      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//      frame.setSize(1100, 900);
+//      frame.add(new gui());
+//      frame.setLocationRelativeTo(null);
+//      frame.setVisible(true);
+//      
+//    });
+//  }
 }
